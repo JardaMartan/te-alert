@@ -1,0 +1,19 @@
+development database (dynamodb):
+docker run -p 8000:8000 amazon/dynamodb-local
+
+NGROK:
+ngrok http 5051
+
+Flask:
+dotenv -f .env_local run python te_bot.py
+
+DDB Object:
+dotenv -f .env_local run python -i ddb_single_table_obj.py
+
+Tests:
+dotenv -f .env_local run python -m unittest test_settings
+
+PIP update:
+pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+
+pip3 list -o --format columns|  cut -d' ' -f1|xargs -n1 pip3 install -U
