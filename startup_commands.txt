@@ -11,7 +11,7 @@ DDB Object:
 dotenv -f .env_local run python -i ddb_single_table_obj.py
 
 Tests:
-dotenv -f .env_local run python -m unittest test_settings
+dotenv -f .env_local run python -m unittest test_te_bot
 
 PIP update:
 pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
