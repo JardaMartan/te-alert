@@ -69,6 +69,8 @@ webex_api = WebexTeamsAPI()
 import json, requests
 from flask import Flask, request, redirect, url_for, make_response
 
+import bot_buttons_cards as bc
+
 DEFAULT_AVATAR_URL= "http://bit.ly/SparkBot-512x512"
 
 flask_app = Flask(__name__)
@@ -210,15 +212,48 @@ def te_webhook():
 
 # @task
 def te_webhook_event(webhook):
+    attach = None
+    
     message = """
 ThousandEyes Alert:  
 ```
 {}
 ```
 """.format(json.dumps(webhook, indent=4))
+
+    alert_type = webhook.get("eventType")
+    if alert_type == "ALERT_NOTIFICATION_TRIGGER":
+        form = bc.ALERT_RAISED_TEMPLATE
+    elif alert_type == "ALERT_NOTIFICATION_CLEAR":
+        form = bc.ALERT_CLEARED_TEMPLATE
+    else:
+        form = None
+        
+    if form:
+        form_data = get_te_alert_data(webhook.get("alert"))
+        form_data.update(form_data["agents"][0])
+        form = bc.nested_replace_dict(form, form_data)
+        attach = [bc.wrap_form(bc.localize(form, "en_US"))]
+
     room_list = get_room_membership()
     for room_id in room_list:
-        webex_api.messages.create(roomId = room_id, markdown = message)
+        webex_api.messages.create(roomId = room_id, markdown = message, attachments = attach)
+        
+def get_te_alert_data(alert):
+    result = {}
+    if alert is not None:      
+        result["rule_expression"] = alert.get("ruleExpression")
+        result["test_name"] = alert.get("testName")
+        result["permalink"] = alert.get("permalink")
+        result["agents"] = []
+        for agent in alert.get("agents"):
+            result["agents"].append({
+                "agent_name": agent.get("agentName"),
+                "metrics_at_start": agent.get("metricsAtStart"),
+                "metrics_at_end": agent.get("metricsAtEnd")
+            })
+            
+    return result
     
 def get_room_membership(room_type = ["direct", "group"]):
     membership_list = webex_api.memberships.list()
