@@ -6,9 +6,9 @@ The Bot has two URLs. Its root URL listens for ThousandEyes webhooks, **/webex**
 <img src="./images/alert_1.png" width="50%">
 
 ## How to run
-The TE Alert Bot runs in Flask WSGI. It is designed to run in Amazon Lambda. Use [Zappa](https://github.com/Miserlou/Zappa) to deploy it. It can also run locally in Flask development mode.
+The TE Alert Bot runs in Flask WSGI. It is designed to run in Amazon Lambda. Use [Zappa](https://github.com/zappa/Zappa) to deploy it. It can also run locally in Flask development mode.
 
-Open [ThousandEyes Alerts](https://app.thousandeyes.com/settings/alerts), open existing alert or create a new one. In alert **Notification** click **Edit webhooks**. Paste the Bot's root URL to the webhook URL. Click **Test**. If the test succeeds, the Bot should send a JSON test message to all Spaces which it is a member of.  
+Open [ThousandEyes Alerts](https://app.thousandeyes.com/settings/alerts), then open existing alert or create a new one. In alert **Notification** click **Edit webhooks**. Paste the Bot's root URL to the webhook URL. Click **Test**. If the test succeeds, the Bot should send a JSON test message to all Spaces which it is a member of.  
 <img src="./images/test_2.png" width="50%">
 <img src="./images/test_1.png" width="50%">
 
@@ -31,7 +31,9 @@ and replace the Authorization with the Bot's Access Token, or run `curl https://
 1. copy the URL provided by NGROK and open it in a web browser
 2. the GET request from the web browser initializes the Bot's webhooks, success screen should be displayed int the browser
 3. add Bot to a space
-4. follow Bot's instructions to create a meeting and run polls
+4. create TE alert and webhook in alert notifications as described above
+5. click **Test** in webhook configuration
+6. try creating an alert in ThousandEyes console
 
 ## AWS Lambda / Zappa Notes
 The Bot is using [python-dotenv](https://pypi.org/project/python-dotenv/) to pass sensitive information, like Access Token, to the Python script. AWS Lambda with [Zappa](https://github.com/zappa/Zappa) allows to run multiple  instances of the same application. For example **dev**, **production**, etc. In order to allow the Vote Bot to run in such an environment the Bot allows Zappa to pass **DOT_ENV_FILE** environment variable to the script. **DOT_ENV_FILE** is a filename which contains the environment variables loaded by Dotenv. If there is no **DOT_ENV_FILE** the Bot loads the variables from **.env** file. So if you used **.env_local** to run the Bot locally, copy it to **.env** before loading the script to AWS. Or you can set the **DOT_ENV_FILE** in **zappa_settings.json** to use a different .env file for each application instance. For example:
