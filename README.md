@@ -20,7 +20,7 @@ Open [ThousandEyes Alerts](https://app.thousandeyes.com/settings/alerts), then o
 1. initialize virtual environment `python3 -m venv venv`
 2. switch to virtual environment `source venv/bin/activate`
 3. install required packages `pip install -r requirements.txt`
-4. start NGROK, forward HTTP to local port 5050 `ngrok http 5050`
+4. start NGROK, forward HTTP to local port 5051 `ngrok http 5051`
 5. create a Webex Teams Bot at https://developer.webex.com/my-apps/new, get Bot ID and Access Token
 6. copy `.env_sample` to `.env_local`, paste Access Token to `WEBEX_TEAMS_ACCESS_TOKEN`
 7. use Access Token to get the Bot Id. Either visit the https://developer.webex.com/docs/api/v1/people/get-my-own-details
