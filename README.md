@@ -8,7 +8,7 @@ The Bot has two URLs. Its root URL listens for ThousandEyes webhooks, **/webex**
 ## How to run
 The TE Alert Bot runs in Flask WSGI. It is designed to run in Amazon Lambda. Use [Zappa](https://github.com/Miserlou/Zappa) to deploy it. It can also run locally in Flask development mode.
 
-Open [ThousandEyes Alerts](https://app.thousandeyes.com/settings/alerts), open existing alert or create a new one. In alert **Notification** click **Edit webhooks**. Paste the Bot's root URL to the webhook URL. Click **Test**. If the test succeeds, the Bot should send a JSON test message to all Spaces which it is a member of.
+Open [ThousandEyes Alerts](https://app.thousandeyes.com/settings/alerts), open existing alert or create a new one. In alert **Notification** click **Edit webhooks**. Paste the Bot's root URL to the webhook URL. Click **Test**. If the test succeeds, the Bot should send a JSON test message to all Spaces which it is a member of.  
 <img src="./images/test_2.png" width="50%">
 <img src="./images/test_1.png" width="50%">
 
