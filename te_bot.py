@@ -131,25 +131,12 @@ def before_request():
 """
 Handle Webex webhook events.
 """
-@flask_app.route("/", methods=["GET", "POST"])
+@flask_app.route("/webex", methods=["GET", "POST"])
 def spark_webhook():
     if request.method == "POST":
         webhook = request.get_json(silent=True)
         flask_app.logger.debug("Webex webhook received: {}".format(webhook))
-        webex_webhook_event(webhook)        
-    elif request.method == "GET":
-        bot_info = get_bot_info()
-        message = "<center><img src=\"{0}\" alt=\"{1}\" style=\"width:256; height:256;\"</center>" \
-                  "<center><h2><b>Congratulations! Your <i style=\"color:#ff8000;\">{1}</i> bot is up and running.</b></h2></center>".format(bot_info.avatar, bot_info.displayName)
-                  
-        message += "<center><b>I'm hosted at: <a href=\"{0}\">{0}</a></center>".format(request.url)
-        res = create_webhook(request.url)
-        if res is True:
-            message += "<center><b>New webhook(s) created sucessfully</center>"
-        else:
-            message += "<center><b>Tried to create a new webhook but failed, see application log for details.</center>"
-
-        return message
+        webex_webhook_event(webhook)
         
     flask_app.logger.debug("Webhook handling done.")
     return "OK"
@@ -164,7 +151,8 @@ def create_webhook(target_url):
     
     arguments:
     target_url -- full URL to be set for the webhook
-    """    
+    """
+    target_url = target_url.strip('/') + url_for("spark_webhook")
     flask_app.logger.debug("Create new webhook to URL: {}".format(target_url))
     
     resource_events = {
@@ -201,12 +189,25 @@ def create_webhook(target_url):
 """
 Handle ThousandEyes webhook events.
 """
-@flask_app.route("/te", methods=["POST"])
+@flask_app.route("/", methods=["GET", "POST"])
 def te_webhook():
     if request.method == "POST":
         webhook = request.get_json(silent=True)
         flask_app.logger.debug("ThousandEyes webhook received: {}".format(webhook))
         te_webhook_event(webhook)
+    elif request.method == "GET":
+        bot_info = get_bot_info()
+        message = "<center><img src=\"{0}\" alt=\"{1}\" style=\"width:256; height:256;\"</center>" \
+                  "<center><h2><b>Congratulations! Your <i style=\"color:#ff8000;\">{1}</i> bot is up and running.</b></h2></center>".format(bot_info.avatar, bot_info.displayName)
+                  
+        message += "<center><b>I'm hosted at: <a href=\"{0}\">{0}</a></center>".format(request.url)
+        res = create_webhook(request.url)
+        if res is True:
+            message += "<center><b>New webhook(s) created sucessfully</center>"
+        else:
+            message += "<center><b>Tried to create a new webhook but failed, see application log for details.</center>"
+
+        return message
         
     return "OK"
 
